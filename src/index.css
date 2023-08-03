@@ -85,9 +85,10 @@ code {
 }
 input {
   height: 47px;
-  width: 100%;
-  padding: 0px 5px 0px 5px;
+  width: 98%;
   border-radius: 20px;
+  padding: 0px 10px;
+  margin-left: -10px;
 }
 button {
   height: 47px;
@@ -105,15 +106,72 @@ button:hover {
   height: 100vh;
   align-items: center;
   justify-content: center;
-  gap: 70px;
+  gap: 30px;
+}
+.register-container {
+  display: flex;
+  height: 84vh;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  text-align: center;
 }
 .login-page-right-container{
   height: fit-content;
-  padding: 20px;
+  padding: 0px 40px 30px 40px;
   background-color: white;
   border-radius: 8px;
+  min-width: 230px;
+  text-align: center;
 }
 .login-right-bottom-div {
   display: flex;
-  gap: 60px;
+  justify-content: space-between;
+}
+.login-page-left-container{
+  line-height: 0.3;
+  
+}
+.login-page-left-container h1{
+ font-size: 45px;
+  
+}
+.register-page-inner-container{
+  height: fit-content;
+  padding: 0px 40px 30px 40px;
+  background-color: white;
+  border-radius: 8px;
+}
+.register-name {
+  display: flex;
+  gap: 23px;
+}
+.forgot-password-text{
+  line-height: 0.4;
+  padding-top: 20px;
+}
+.forgot-password-text p{
+ font-size: 14px;
+}
+.sidebar-text{
+  margin-left: 25px;
+}
+
+@media screen and (max-width: 856px) {
+  .login-container {
+    flex-direction: column;
+    gap:15px;
+  }
+  .forgot-password-text {
+    line-height: 0.99;
+}
+.main-container {
+  width: 90%;
+}
+.sideBar-container {
+  width: 95%;
+}
+.react-input-emoji--input {
+  width: 600px !important;
+}
 }

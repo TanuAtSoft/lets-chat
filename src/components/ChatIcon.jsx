@@ -2,8 +2,8 @@ import * as React from "react"
 const ChatIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={16}
-    height={16}
+    width={50}
+    height={50}
     fill="currentColor"
     className="bi bi-chat-dots-fill"
     {...props}
