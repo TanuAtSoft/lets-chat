@@ -7,7 +7,8 @@ const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
-const Chats = lazy(()=> import("./pages/Chats"))
+const Chats = lazy(() => import("./pages/Chats"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
 function App() {
   return (
@@ -25,7 +26,13 @@ function App() {
             />
             <Route
               exact
-              path="/"
+              path="/reset-password/:token"
+              name="Register Page"
+              element={<ResetPassword />}
+            />
+            <Route
+              exact
+              path="/dashboard"
               name="dashboard"
               element={
                 <PrivateRoute>
