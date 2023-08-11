@@ -1,14 +1,16 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { signUp } from "../apis/signUp/signUp";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [user, setUser] = useState({
-    firstName: "",
-    lastName: "",
+    firstname: "",
+    lastname: "",
     email: "",
     password: "",
   });
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -47,7 +49,13 @@ const Register = () => {
       /\S/.test(user.password);
     if (testPass) {
       const res = await signUp(user);
-      console.log("res", res);
+     if(res?.data?.statusCode === 200){
+      alert(res?.data?.statusMessage)
+      navigate("/login")
+     }
+     if (res?.remote === "failure") {
+      alert(res?.errors?.errors);
+    }
     }
   };
   return (
@@ -58,13 +66,13 @@ const Register = () => {
           <input
             type="text"
             placeholder="First Name"
-            name="firstName"
+            name="firstname"
             onChange={(e) => handleChange(e)}
           />
           <input
             type="text"
             placeholder="Last Name"
-            name="lastName"
+            name="lastname"
             onChange={(e) => handleChange(e)}
           />
         </div>

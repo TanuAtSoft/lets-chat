@@ -8,5 +8,17 @@ export const API_ROUTES = {
     },
     FORGOT_PASSWORD:{
         FORGOT_PASSWORD:"/auth/forgotPassword"
+    },
+    CHAT:{
+        CREATE_CHAT:"/chat",
+        GET_CHAT:"/chat",
+        FIND_CHAT:"/chat/find"
+    },
+    MESSAGE:{
+        GET_MESSAGE:"/message",
+        ADD_MESSAGE:"/message"
+    },
+    USER:{
+        GET_USER:"/user"
     }
 }

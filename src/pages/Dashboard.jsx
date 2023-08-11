@@ -7,24 +7,13 @@ import { useMediaQuery } from 'react-responsive'
 
 const Dashboard = () => {
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 856px)' })
-    // let token = JSON.parse(localStorage.getItem("token"));
-    // const navigate = useNavigate()
-    // useEffect(()=>{
-    //     if(!token){
-    //         navigate("/login")
-    //     }
-    // },[navigate, token])
-    const [selected,setSelected] = useState(false)
-    const handleSelect=()=>{
-        setSelected(true)
-    }
-    console.log("selected",)
+   
   return (
     <Fragment>
       <div className="header"></div>
       <div className="container">
-     <UserContainer handleSelect={handleSelect} selected={selected}/>
-      {!selected && !isTabletOrMobile && <DefaultChatContainer/>}
+     <UserContainer />
+      {!isTabletOrMobile && <DefaultChatContainer/>}
       </div>
     </Fragment>
   );

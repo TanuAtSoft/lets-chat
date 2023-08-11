@@ -1,11 +1,18 @@
 import { Link } from "react-router-dom";
 import { signIn } from "../apis/signIn/signIn";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [user, setUser] = useState({ email: "", password: "" });
   const navigate = useNavigate();
+   const token = JSON.parse(localStorage.getItem("token"));
+
+   useEffect(()=>{
+   if(token){
+    navigate("/dashboard")
+   }
+   },[navigate, token])
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -50,7 +57,8 @@ const Login = () => {
             "token",
             JSON.stringify(res.data.data.user.token)
           );
-          localStorage.setItem("user", JSON.stringify(res.data.data.user.user));
+          localStorage.setItem("user", JSON.stringify(res.data.data.user.name));
+          localStorage.setItem("id", JSON.stringify(res.data.data.user.id));
           navigate("/dashboard");
         } else {
           alert(res.data.statusMessage);

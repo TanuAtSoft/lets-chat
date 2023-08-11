@@ -36,7 +36,6 @@ const parseResponse = (response) => {
   export const apiRoot = async (reqParams) => {
     try {
       const instance = await axiosInstance();
-      console.log("instance", instance)
       reqParams.headers = {
         "Content-Type": reqParams.contentType
           ? reqParams.contentType
