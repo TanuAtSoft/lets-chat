@@ -18,6 +18,9 @@ export const API_ROUTES = {
         GET_MESSAGE:"/message",
         ADD_MESSAGE:"/message"
     },
+    UPLOAD:{
+        IMAGES:"/upload/images"
+    },
     USER:{
         GET_USER:"/user"
     }

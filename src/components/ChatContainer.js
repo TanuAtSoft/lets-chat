@@ -6,13 +6,19 @@ import { findChat } from "../apis/chats/findChat";
 import { getMessages } from "../apis/messages/getMessages";
 import { createChat } from "../apis/chats/createChat";
 import { getUser } from "../apis/users/getUser";
+import PlusIcon from "../components/ChatIcon";
 import { SocketContext } from "../context/service";
-import moment from "moment"
+import moment from "moment";
+import { uploadImgs } from "../apis/upload/uploadImgs";
+import ImageModal from "./ImageModal";
+import { isValidHttpUrl } from "../utils/isValidHttpUrl";
 
 const ChatContainer = () => {
   const [text, setText] = useState("");
   let token = JSON.parse(localStorage.getItem("token"));
   const scroll = useRef();
+  const [files, setFiles] = useState([]);
+  const [imgPreview, setImgPreview] = useState([]);
 
   const socket = useContext(SocketContext);
   const [reciever, setReceiver] = useState(null);
@@ -22,11 +28,20 @@ const ChatContainer = () => {
   let id = JSON.parse(localStorage.getItem("id"));
   const [chatId, setChatId] = useState();
   const [messages, setMessages] = useState([]);
-  const [date,setDate] = useState()
+  const [date, setDate] = useState();
 
-  useEffect(()=>{
-    setMessages([])
-  },[id])
+  const handleFile = async (event) => {
+    let file = event.target.files[0];
+    setFiles([...files, file]);
+    const tempUrl = URL.createObjectURL(event.target.files[0]);
+    if (imgPreview.length < 7) {
+      setImgPreview([...imgPreview, tempUrl]);
+    }
+  };
+
+  useEffect(() => {
+    setMessages([]);
+  }, [id]);
 
   useEffect(() => {
     const find_chat = async () => {
@@ -36,10 +51,9 @@ const ChatContainer = () => {
           setChatId(res.data.data._id);
           try {
             const { data } = await getMessages(token, res.data.data._id);
-            console.log("data from message api",data)
-            if(data.length > 0){
-              const newDate = moment(data[0].createdAt).format("DD/MM/YY")
-              setDate(newDate) 
+            if (data.length > 0) {
+              const newDate = moment(data[0].createdAt).format("DD/MM/YY");
+              setDate(newDate);
             }
             setMessages(data);
           } catch (error) {
@@ -60,7 +74,7 @@ const ChatContainer = () => {
     if (id && params.id) {
       find_chat();
     }
-  }, [id,params.id]);
+  }, [id, params.id]);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -80,13 +94,11 @@ const ChatContainer = () => {
   }, [sendMessage]);
 
   socket.on("recieve-message", (data) => {
-    console.log("recieve-message", data);
     setReceivedMessage(data);
   });
 
   useEffect(() => {
     const handler = (message) => {
-      console.log("recieve-message", message);
       setReceivedMessage(message);
     };
     socket.on("recieve-message", handler);
@@ -94,7 +106,6 @@ const ChatContainer = () => {
   }, [socket]);
 
   useEffect(() => {
-    console.log("Message Arrived: ", receivedMessage);
     if (receivedMessage !== null && receivedMessage.chatId === chatId) {
       setMessages([...messages, receivedMessage]);
     }
@@ -107,11 +118,29 @@ const ChatContainer = () => {
   // Send Message
   const handleSend = async (e) => {
     e.preventDefault();
-    const message = {
+    const formData = new FormData();
+    let tempText
+
+    if (files.length > 0) {
+      files.forEach((file, i) => {
+        formData.append("images", file);
+      });
+      const uploadedRes = await uploadImgs(formData);
+      if (uploadedRes.status) {
+       tempText = text + " " + uploadedRes.data.urls;
+       setText(tempText)
+      }
+      if (!uploadedRes.status) {
+        alert(uploadedRes.statusMessage);
+        return;
+      }
+    }
+    let message = {
       senderId: id,
-      text: text,
+      text:text,
       chatId: chatId,
     };
+    console.log("message", text);
     //const receiverId = chat.members.find((id)=>id!==currentUser);
     // send message to socket server
     const receiverId = params.id;
@@ -125,18 +154,15 @@ const ChatContainer = () => {
       console.log("error");
     }
   };
-  useEffect(()=> {
+  useEffect(() => {
     scroll.current?.scrollIntoView({ behavior: "smooth" });
-  },[messages])
+  }, [messages]);
 
-  console.log("moment",moment("2023-08-11T09:09:22.879Z").format("DD/MM/YY HH:mm:ss"))
-const findAlignment = (senderId)=>{
-  console.log("id",id)
-  if(senderId === id){
-    return "end"
-  }
-  else return "start"
-}
+  const findAlignment = (senderId) => {
+    if (senderId === id) {
+      return "end";
+    } else return "start";
+  };
   return (
     <div className="inner-container main-container">
       <div className="chat-user">
@@ -156,15 +182,48 @@ const findAlignment = (senderId)=>{
         <hr />
       </div>
       <div className="message-div">
-      {messages.map((item, id) => {
-        return <div key={id}  ref={scroll} className="messages" style={{alignSelf : findAlignment(item.senderId)}}>
-          <p className="text">{item.text}</p>
-        <p className="time">{moment(item.createdAt).format("HH:mm")}</p>
-        </div>;
-      })}
+        {messages.map((item, id) => {
+          return (
+            <div
+              key={id}
+              ref={scroll}
+              className="messages"
+              style={{ alignSelf: findAlignment(item.senderId) }}
+            >
+              <p className="text">{item.text}</p>
+              <p className="time">{moment(item.createdAt).format("HH:mm")}</p>
+            </div>
+          );
+        })}
+      </div>
+      <div className="img-modals">
+      <ImageModal imgPreview={imgPreview} />
       </div>
 
       <div className="type-chat-div">
+        <div className="plus-icon">
+          <input
+            type="file"
+            id="file"
+            style={{ display: "none" }}
+            onChange={(e) => handleFile(e)}
+          />
+          <label htmlFor="file">
+            <span className="fa fa-edit edit-icon"><PlusIcon/> </span>
+          </label>
+
+          {/* 
+        <label for="file"> <span><PlusIcon className="edit-icon"/></span></label>
+          <input
+            accept="image/*"
+            name="images"
+            type="file"
+             style={{display: "none"}}
+            onChange={(e) => {
+              handleFile(e);
+            }}
+          /> */}
+        </div>
         {/* <input tyep="text" placeholder="Type your message"></input> */}
         <div className="emoji-div" style={{ width: "90%" }}>
           <InputEmoji

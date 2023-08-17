@@ -172,6 +172,9 @@ button:hover {
   .react-input-emoji--input {
     width: 600px !important;
   }
+  .type-chat-div{
+    gap:1px;
+  }
 }
 .message-div {
   display: flex;
@@ -199,4 +202,25 @@ button:hover {
   position: absolute;
   bottom: -10px;
   right: 5px;
+}
+.plus-icon {
+  padding: 15px 0px;
+}
+
+.edit-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+}
+.img-modals {
+  position: absolute;
+  bottom: 100px;
+  left: 14%;
+  background: transparent;
+}
+.img-modals img{
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  border-radius: 0px;
 }
