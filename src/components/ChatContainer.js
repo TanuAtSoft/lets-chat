@@ -1,5 +1,5 @@
 import InputEmoji from "react-input-emoji";
-import { useState, useRef, useEffect, useContext } from "react";
+import { useState, useRef, useEffect, useContext, Fragment } from "react";
 import { addMessage } from "../apis/messages/addMessage";
 import { useParams } from "react-router-dom";
 import { findChat } from "../apis/chats/findChat";
@@ -11,7 +11,7 @@ import { SocketContext } from "../context/service";
 import moment from "moment";
 import { uploadImgs } from "../apis/upload/uploadImgs";
 import ImageModal from "./ImageModal";
-import { isValidHttpUrl } from "../utils/isValidHttpUrl";
+import { isValidHttpUrl,validImageUrl } from "../utils/isValidHttpUrl";
 
 const ChatContainer = () => {
   const [text, setText] = useState("");
@@ -119,7 +119,7 @@ const ChatContainer = () => {
   const handleSend = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    let tempText
+    let tempText;
 
     if (files.length > 0) {
       files.forEach((file, i) => {
@@ -127,8 +127,8 @@ const ChatContainer = () => {
       });
       const uploadedRes = await uploadImgs(formData);
       if (uploadedRes.status) {
-       tempText = text + " " + uploadedRes.data.urls;
-       setText(tempText)
+        tempText = text + " " + uploadedRes.data.urls;
+        setText(tempText);
       }
       if (!uploadedRes.status) {
         alert(uploadedRes.statusMessage);
@@ -137,7 +137,7 @@ const ChatContainer = () => {
     }
     let message = {
       senderId: id,
-      text:text,
+      text: tempText ? tempText : text,
       chatId: chatId,
     };
     console.log("message", text);
@@ -150,6 +150,7 @@ const ChatContainer = () => {
       const { data } = await addMessage(token, message);
       setMessages([...messages, data]);
       setText("");
+      setImgPreview([]);
     } catch {
       console.log("error");
     }
@@ -189,15 +190,26 @@ const ChatContainer = () => {
               ref={scroll}
               className="messages"
               style={{ alignSelf: findAlignment(item.senderId) }}
-            >
-              <p className="text">{item.text}</p>
+            >{
+              item.text?.split(" ").map((innerItem,id)=>{
+               return <Fragment>
+                {validImageUrl(innerItem) ? (
+                  <img src={innerItem} alt="img"  className="message-img"/>
+                ) : (
+                  <span className="text">{innerItem}</span>
+                )}
+                </Fragment>
+              })
+              
+            }
+             
               <p className="time">{moment(item.createdAt).format("HH:mm")}</p>
             </div>
           );
         })}
       </div>
       <div className="img-modals">
-      <ImageModal imgPreview={imgPreview} />
+        <ImageModal imgPreview={imgPreview} />
       </div>
 
       <div className="type-chat-div">
@@ -209,7 +221,9 @@ const ChatContainer = () => {
             onChange={(e) => handleFile(e)}
           />
           <label htmlFor="file">
-            <span className="fa fa-edit edit-icon"><PlusIcon/> </span>
+            <span className="fa fa-edit edit-icon">
+              <PlusIcon />{" "}
+            </span>
           </label>
 
           {/* 

@@ -144,7 +144,7 @@ button:hover {
   display: flex;
   gap: 23px;
 }
-.forgot-password-text {
+.forgot-password-text  {
   line-height: 0.4;
   padding-top: 20px;
 }
@@ -185,7 +185,7 @@ button:hover {
   max-height: 60%;
 }
 .messages {
-  padding: 3px 12px 2px 9px;
+  padding: 7px 12px 11px 9px;
   background: #9198e5;
   max-width: fit-content;
   border-radius: 8px;
@@ -223,4 +223,9 @@ button:hover {
   width: 50px;
   position: absolute;
   border-radius: 0px;
+}
+.message-img{
+  height: 100px !important;
+  width: auto !important;
+  border-radius: 2px !important;
 }

@@ -8,3 +8,7 @@ export const isValidHttpUrl = (string) => {
   
     return (url.protocol === "http:" || url.protocol === "https:");
   }
+
+  export const validImageUrl = (str)=>{
+    return (str.match(/\.(jpg|gif|png)$/)!= null);
+  }
