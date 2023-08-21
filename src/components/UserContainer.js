@@ -24,7 +24,7 @@ const UserContainer = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       const res = await getUsers(token);
-      if (res.data.statusCode === 200) {
+      if (res?.data?.statusCode === 200) {
         setUsers(res?.data?.data);
       }
     };

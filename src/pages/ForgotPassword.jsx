@@ -22,8 +22,8 @@ const ForgotPassword = () => {
       setError(true);
     } else {
       const res = await forgotPassword({ email: user.email });
-      if (res.data.statusCode === 200) {
-        alert(res.data.statusMessage);
+      if (res?.data?.statusCode === 200) {
+        alert(res?.data?.statusMessage);
         setSuccess(true);
       }
     }

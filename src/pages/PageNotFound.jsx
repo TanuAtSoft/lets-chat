@@ -10,7 +10,7 @@ const PageNotFound = () => {
       }}
     >
       <div style={{lineHeight:"0.8px",  display: "flex",flexDirection:"column",alignItems: "center",
-        justifyContent: "center",}}>
+        justifyContent: "center"}}>
         <h1 style={{fontSize:"40px"}}>404</h1>
         <p>Page not found</p>
         <p>Go back to <Link to="/">home </Link></p>

@@ -46,13 +46,13 @@ const ChatContainer = () => {
   useEffect(() => {
     const find_chat = async () => {
       const res = await findChat(token, id, params.id);
-      if (res.data?.statusCode === 200) {
+      if (res?.data?.statusCode === 200) {
         if (res?.data?.data) {
-          setChatId(res.data.data._id);
+          setChatId(res?.data?.data._id);
           try {
-            const { data } = await getMessages(token, res.data.data._id);
-            if (data.length > 0) {
-              const newDate = moment(data[0].createdAt).format("DD/MM/YY");
+            const { data } = await getMessages(token, res?.data?.data._id);
+            if (data?.length > 0) {
+              const newDate = moment(data[0]?.createdAt).format("DD/MM/YY");
               setDate(newDate);
             }
             setMessages(data);
@@ -66,7 +66,7 @@ const ChatContainer = () => {
           };
           const res = await createChat(token, data);
           if (res?.data?.statusCode === 200) {
-            setChatId(res.data.data._id);
+            setChatId(res?.data?.data._id);
           }
         }
       }
@@ -79,8 +79,8 @@ const ChatContainer = () => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       const res = await getUser(token, params.id);
-      if (res.data.statusCode === 200) {
-        setReceiver(res.data.data);
+      if (res?.data?.statusCode === 200) {
+        setReceiver(res?.data?.data);
       }
     };
     fetchUserDetails();
@@ -196,7 +196,7 @@ const ChatContainer = () => {
                 {validImageUrl(innerItem) ? (
                   <img src={innerItem} alt="img"  className="message-img"/>
                 ) : (
-                  <span className="text">{innerItem}</span>
+                  <span className="text">{" "}{innerItem}</span>
                 )}
                 </Fragment>
               })

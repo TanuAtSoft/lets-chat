@@ -51,21 +51,21 @@ const Login = () => {
       /\S/.test(user.password);
     if (testPass) {
       const res = await signIn(user);
-      if (res.remote === "success") {
-        if (res.data.statusCode === 200) {
+      if (res?.remote === "success") {
+        if (res?.data?.statusCode === 200) {
           localStorage.setItem(
             "token",
-            JSON.stringify(res.data.data.user.token)
+            JSON.stringify(res?.data?.data?.user?.token)
           );
-          localStorage.setItem("user", JSON.stringify(res.data.data.user.name));
-          localStorage.setItem("id", JSON.stringify(res.data.data.user.id));
+          localStorage.setItem("user", JSON.stringify(res?.data?.data?.user?.name));
+          localStorage.setItem("id", JSON.stringify(res?.data?.data?.user?.id));
           navigate("/dashboard");
         } else {
-          alert(res.data.statusMessage);
+          alert(res?.data?.statusMessage);
         }
       }
-      if (res.remote === "failure") {
-        alert(res.errors.errors);
+      if (res?.remote === "failure") {
+        alert(res?.errors?.errors);
       }
     }
   };
