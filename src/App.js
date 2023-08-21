@@ -1,5 +1,11 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -17,6 +23,12 @@ function App() {
         {/* <div className="header"></div> */}
         <Suspense fallback={<p>Loading..</p>}>
           <Routes>
+            <Route
+              exact
+              path="/"
+              name="Login Page"
+              element={<Navigate to="/login" replace />}
+            />
             <Route exact path="/login" name="Login Page" element={<Login />} />
             <Route
               exact
