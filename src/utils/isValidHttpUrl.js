@@ -10,5 +10,5 @@ export const isValidHttpUrl = (string) => {
   }
 
   export const validImageUrl = (str)=>{
-    return (str.match(/\.(jpg|gif|png)$/)!= null);
+    return (str.match(/\.(jpg|gif|png|jpeg)$/)!= null);
   }

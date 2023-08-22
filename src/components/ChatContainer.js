@@ -11,7 +11,7 @@ import { SocketContext } from "../context/service";
 import moment from "moment";
 import { uploadImgs } from "../apis/upload/uploadImgs";
 import ImageModal from "./ImageModal";
-import { isValidHttpUrl,validImageUrl } from "../utils/isValidHttpUrl";
+import { isValidHttpUrl, validImageUrl } from "../utils/isValidHttpUrl";
 
 const ChatContainer = () => {
   const [text, setText] = useState("");
@@ -38,6 +38,12 @@ const ChatContainer = () => {
       setImgPreview([...imgPreview, tempUrl]);
     }
   };
+  console.log(
+    "text",
+    validImageUrl(
+      "https://my-e-site.s3.sa-east-1.amazonaws.com/public/images/1692681872-testing_new_1683791366975.jpeg"
+    )
+  );
 
   useEffect(() => {
     setMessages([]);
@@ -127,8 +133,10 @@ const ChatContainer = () => {
       });
       const uploadedRes = await uploadImgs(formData);
       if (uploadedRes.status) {
-        tempText = text + " " + uploadedRes.data.urls;
+        tempText = text + " " + uploadedRes.data.urls.join(" ");
         setText(tempText);
+        setFiles([])
+        setImgPreview([])
       }
       if (!uploadedRes.status) {
         alert(uploadedRes.statusMessage);
@@ -140,7 +148,6 @@ const ChatContainer = () => {
       text: tempText ? tempText : text,
       chatId: chatId,
     };
-    console.log("message", text);
     //const receiverId = chat.members.find((id)=>id!==currentUser);
     // send message to socket server
     const receiverId = params.id;
@@ -190,19 +197,18 @@ const ChatContainer = () => {
               ref={scroll}
               className="messages"
               style={{ alignSelf: findAlignment(item.senderId) }}
-            >{
-              item.text?.split(" ").map((innerItem,id)=>{
-               return <Fragment>
-                {validImageUrl(innerItem) ? (
-                  <img src={innerItem} alt="img"  className="message-img"/>
-                ) : (
-                  <span className="text">{" "}{innerItem}</span>
-                )}
-                </Fragment>
-              })
-              
-            }
-             
+            >
+              {item.text?.split(" ").map((innerItem, id) => {
+                return (
+                  <Fragment key={id}>
+                    {validImageUrl(innerItem) ? (
+                      <img src={innerItem} alt="img" className="message-img" />
+                    ) : (
+                      <span className="text"> {innerItem}</span>
+                    )}
+                  </Fragment>
+                );
+              })}
               <p className="time">{moment(item.createdAt).format("HH:mm")}</p>
             </div>
           );
