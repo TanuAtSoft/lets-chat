@@ -15,6 +15,7 @@ const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
 const Chats = lazy(() => import("./pages/Chats"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const ProfileSettings = lazy(()=>import("./pages/ProfileSettings"))
 
 function App() {
   return (
@@ -65,7 +66,7 @@ function App() {
               name="profile"
               element={
                 <PrivateRoute>
-                  <ProfilePage />
+                  <ProfileSettings />
                 </PrivateRoute>
               }
             />

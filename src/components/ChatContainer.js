@@ -6,7 +6,7 @@ import { findChat } from "../apis/chats/findChat";
 import { getMessages } from "../apis/messages/getMessages";
 import { createChat } from "../apis/chats/createChat";
 import { getUser } from "../apis/users/getUser";
-import PlusIcon from "../components/ChatIcon";
+import PlusIcon from "./PlusIcon";
 import { SocketContext } from "../context/service";
 import moment from "moment";
 import { uploadImgs } from "../apis/upload/uploadImgs";
