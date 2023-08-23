@@ -215,8 +215,10 @@ button:hover {
 .img-modals {
   position: absolute;
   bottom: 100px;
-  left: 14%;
+  left: 35%;
   background: transparent;
+  display: flex;
+  gap: 35px;
 }
 .img-modals img{
   height: 50px;
@@ -228,4 +230,25 @@ button:hover {
   height: 100px !important;
   width: auto !important;
   border-radius: 2px !important;
+}
+
+button.cross {
+  height: 26px;
+  width: 26px;
+  padding: 10px;
+  border-radius: 50%;
+  border: transparent;
+  background: #c7cdf3;
+  position: absolute;
+}
+
+.customStyles{
+  top: '50%';
+  left: '50%';
+  right: 'auto';
+  bottom: 'auto';
+  margin-right: '-50%';
+  transform: 'translate(-50%, -50%)';
+  height: "fit-content";
+  width: "80%";
 }

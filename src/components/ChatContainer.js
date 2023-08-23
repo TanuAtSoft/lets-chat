@@ -11,7 +11,14 @@ import { SocketContext } from "../context/service";
 import moment from "moment";
 import { uploadImgs } from "../apis/upload/uploadImgs";
 import ImageModal from "./ImageModal";
+import PdfIcon from "./PdfIcon";
+import ViewImageModal from "./ViewImageModal";
 import { isValidHttpUrl, validImageUrl } from "../utils/isValidHttpUrl";
+
+const getFileName = (str) => {
+  const splitArr = str.split("/");
+  return splitArr[splitArr.length - 1];
+};
 
 const ChatContainer = () => {
   const [text, setText] = useState("");
@@ -29,22 +36,23 @@ const ChatContainer = () => {
   const [chatId, setChatId] = useState();
   const [messages, setMessages] = useState([]);
   const [date, setDate] = useState();
+  const [viewOpen, setViewOpen] = useState(false);
+  const [imgUrl, setImgUrl] = useState();
+
+  const closeModal =() =>{
+    setViewOpen(false);
+  }
 
   const handleFile = async (event) => {
     let file = event.target.files[0];
-    setFiles([...files, file]);
-    const tempUrl = URL.createObjectURL(event.target.files[0]);
-    if (imgPreview.length < 7) {
-      setImgPreview([...imgPreview, tempUrl]);
+    if (file) {
+      setFiles([...files, file]);
+      const tempUrl = URL.createObjectURL(event.target.files[0]);
+      if (imgPreview.length < 7) {
+        setImgPreview([...imgPreview, tempUrl]);
+      }
     }
   };
-  console.log(
-    "text",
-    validImageUrl(
-      "https://my-e-site.s3.sa-east-1.amazonaws.com/public/images/1692681872-testing_new_1683791366975.jpeg"
-    )
-  );
-
   useEffect(() => {
     setMessages([]);
   }, [id]);
@@ -135,8 +143,8 @@ const ChatContainer = () => {
       if (uploadedRes.status) {
         tempText = text + " " + uploadedRes.data.urls.join(" ");
         setText(tempText);
-        setFiles([])
-        setImgPreview([])
+        setFiles([]);
+        setImgPreview([]);
       }
       if (!uploadedRes.status) {
         alert(uploadedRes.statusMessage);
@@ -171,6 +179,7 @@ const ChatContainer = () => {
       return "end";
     } else return "start";
   };
+
   return (
     <div className="inner-container main-container">
       <div className="chat-user">
@@ -202,9 +211,32 @@ const ChatContainer = () => {
                 return (
                   <Fragment key={id}>
                     {validImageUrl(innerItem) ? (
-                      <img src={innerItem} alt="img" className="message-img" />
+                      <img
+                        src={innerItem}
+                        alt="img"
+                        className="message-img"
+                        onClick={() => {
+                          setImgUrl(innerItem);
+                          console.log("innerItem", innerItem)
+                          setViewOpen(true);
+                        }}
+                      />
                     ) : (
-                      <span className="text"> {innerItem}</span>
+                      <span style={{ lineHeight: "0.1" }}>
+                        {" "}
+                        {innerItem.includes(".pdf") ? (
+                          <a
+                            className="href"
+                            href={innerItem}
+                            style={{ color: "black", textDecoration: "none" }}
+                          >
+                            <PdfIcon />
+                            <p>{getFileName(innerItem)}</p>
+                          </a>
+                        ) : (
+                          <span className="text"> {innerItem}</span>
+                        )}
+                      </span>
                     )}
                   </Fragment>
                 );
@@ -215,7 +247,13 @@ const ChatContainer = () => {
         })}
       </div>
       <div className="img-modals">
-        <ImageModal imgPreview={imgPreview} />
+        <ImageModal
+          imgPreview={imgPreview}
+          setImgPreview={setImgPreview}
+          files={files}
+          setFiles={setFiles}
+          imgUrl={imgUrl}
+        />
       </div>
 
       <div className="type-chat-div">
@@ -244,6 +282,7 @@ const ChatContainer = () => {
             }}
           /> */}
         </div>
+       <ViewImageModal open={viewOpen} closeModal={closeModal} imgUrl={imgUrl}/>
         {/* <input tyep="text" placeholder="Type your message"></input> */}
         <div className="emoji-div" style={{ width: "90%" }}>
           <InputEmoji
