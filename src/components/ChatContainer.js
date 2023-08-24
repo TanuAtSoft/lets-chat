@@ -231,7 +231,7 @@ const ChatContainer = () => {
                             style={{ color: "black", textDecoration: "none" }}
                           >
                             <PdfIcon />
-                            <p>{getFileName(innerItem)}</p>
+                            <p style={{ lineHeight: "1.1" }}>{getFileName(innerItem)}</p>
                           </a>
                         ) : (
                           <span className="text"> {innerItem}</span>

@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense,useState } from "react";
 
 import {
   BrowserRouter as Router,
@@ -18,6 +18,7 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const ProfileSettings = lazy(()=>import("./pages/ProfileSettings"))
 
 function App() {
+  const [expiry, setExpiry] = useState(0);
   return (
     <div className="App">
       <Router>

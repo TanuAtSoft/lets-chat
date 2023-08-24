@@ -38,6 +38,7 @@ code {
 }
 .sideBar-container {
   width: 25%;
+  overflow-y: scroll;
 }
 .main-container {
   width: 67%;
@@ -175,6 +176,8 @@ button:hover {
   }
   .sideBar-container {
     width: 95%;
+    height: 100%;
+    overflow-y: scroll;
   }
   .react-input-emoji--input {
     width: 600px !important;
@@ -183,13 +186,18 @@ button:hover {
     gap:1px;
   }
 }
+.save-btn {
+  position: absolute;
+  right: 13%;
+  bottom: 9%;
+}
 .message-div {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   padding: 1.5rem;
   overflow: scroll;
-  max-height: 60%;
+  max-height: 50%;
 }
 .messages {
   padding: 7px 12px 11px 9px;
@@ -264,4 +272,23 @@ button.cross {
   vertical-align: middle;
   gap: 10px;
   align-items: center;
+}
+.settings-inner-div {
+  line-height: 0.1;
+}
+.settings-inner-img-div {
+  align-items: center;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+.settings-inner-img-div img {
+  border-radius: 50%;
+  height: 200px;
+}
+.cam-icon {
+  position: absolute;
+  right: 36%;
+  bottom: 13%;
 }
