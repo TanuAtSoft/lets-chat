@@ -22,6 +22,8 @@ export const API_ROUTES = {
         IMAGES:"/upload/images"
     },
     USER:{
-        GET_USER:"/user"
+        GET_USER:"/user",
+        UPDATE_USER_PIC:"/updateUserPic",
+        RESET_PASSWORD:"/auth/resetPassword"
     }
 }

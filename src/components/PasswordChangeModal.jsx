@@ -2,7 +2,7 @@ import Modal from "react-modal";
 import CrossIcon from "./CrossIcon";
 import { useMediaQuery } from "react-responsive";
 import { useState } from "react";
-import {resetPasswordRequest} from "../apis/profiles/resetPasswordRequest"
+import { resetPassword } from "../apis/profiles/resetPassword";
 
 const mobileCustomStyles = {
   content: {
@@ -34,17 +34,27 @@ const PasswordChangeModal = ({
   handlePasswordModalClose,
 }) => {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 856px)" });
-  const [user, setUser] = useState({oldPassword:"", newPassword: "", cNewPassword: "" });
+  const [user, setUser] = useState({
+    oldPassword: "",
+    newPassword: "",
+    cNewPassword: "",
+  });
   let token = JSON.parse(localStorage.getItem("token"));
+  let id = JSON.parse(localStorage.getItem("id"));
 
   const handleChange = (e) => {
     const name = e.target.name;
     user[name] = e.target.value;
     setUser({ ...user });
   };
-  const handleSumbit = (e) => {
-    if(user.oldPassword === ""){
-
+  const handleSumbit = async (e) => {
+    const data = {
+      newPassword: user.newPassword,
+      oldPassword: user.oldPassword,
+    };
+    const res = await resetPassword(token, data);
+    if(res?.data?.statusCode === 200){
+      handlePasswordModalClose()
     }
   };
   return (
@@ -59,8 +69,8 @@ const PasswordChangeModal = ({
       <div onClick={handlePasswordModalClose}>
         <CrossIcon />
       </div>
-      <div className="login-page-right-container" style={{minWidth:"200px"}}>
-        <h3>Login</h3>
+      <div className="login-page-right-container" style={{ minWidth: "200px" }}>
+        <h3>Change Password</h3>
         <input
           type="password"
           placeholder="Old Password"

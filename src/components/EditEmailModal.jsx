@@ -2,6 +2,7 @@ import Modal from "react-modal";
 import CrossIcon from "./CrossIcon";
 import { useMediaQuery } from "react-responsive";
 import { useState } from "react";
+import { updateUserPic } from "../apis/users/updateUserPic";
 
 const mobileCustomStyles = {
   content: {
@@ -29,19 +30,32 @@ const DesktopCustomStyles = {
 };
 
 const EditEmailModal = ({
-    openEditEmailModal,
-    handleEditEmailModalClose
+  openEditEmailModal,
+  handleEditEmailModalClose,
+  user,
+  handleChange,
 }) => {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 856px)" });
-  const [user, setUser] = useState({email:"", cEmail: "",password:"" });
+  const [changes, setChanges] = useState({cEmail:"", password:""});
+  let token = JSON.parse(localStorage.getItem("token"));
+  let id = JSON.parse(localStorage.getItem("id"));
 
-  const handleChange = (e) => {
-    const name = e.target.name;
-    user[name] = e.target.value;
-    setUser({ ...user });
+  const handleSumbit = async(e) => {
+    const data ={
+      email: changes.cEmail,
+      password: changes.password
+    }
+    const res = await updateUserPic(token, id, data);
+    if(res?.data?.statusCode === 200){
+      handleEditEmailModalClose()
+    }
   };
-  const handleSumbit = (e) => {
-    console.log("user", user);
+
+  const handleChanges = (e) => {
+    console.log("e",e.target.value)
+    const name = e.target.name;
+    changes[name] = e.target.value
+    setChanges({...changes});
   };
   return (
     <Modal
@@ -55,13 +69,13 @@ const EditEmailModal = ({
       <div onClick={handleEditEmailModalClose}>
         <CrossIcon />
       </div>
-      <div className="login-page-right-container" style={{minWidth:"200px"}}>
+      <div className="login-page-right-container" style={{ minWidth: "200px" }}>
         <h3>Change Email</h3>
         <input
           type="email"
           placeholder="Email"
           name="email"
-          value={user.email}
+          value={user?.email}
           onChange={(e) => handleChange(e)}
         />
         <br />
@@ -70,22 +84,21 @@ const EditEmailModal = ({
           type="email"
           placeholder="Confirm Email"
           name="cEmail"
-          value={user.cEmail}
-          onChange={(e) => handleChange(e)}
+          value={changes.cEmail}
+          onChange={(e) => handleChanges(e)}
         />
-        <br/>
-        <br/>
+        <br />
+        <br />
         <input
           type="password"
           placeholder="Enter your password"
           name="password"
-          value={user.password}
-          onChange={(e) => handleChange(e)}
+          value={changes.password}
+          onChange={(e) => handleChanges(e)}
         />
-        <br/>
-        <br/>
-       
-       
+        <br />
+        <br />
+
         <button style={{ width: "100%" }} onClick={(e) => handleSumbit(e)}>
           Change Email
         </button>

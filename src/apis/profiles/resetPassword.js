@@ -3,7 +3,7 @@ import { apiRoot } from "../root";
 
 export const resetPassword = (token,data) => {  
     return apiRoot({ 
-        url: `/${API_ROUTES.PROFILE.RESET_PASSWORD}`,
+        url: `${process.env.REACT_APP_BASE_API_URL}${API_ROUTES.USER.RESET_PASSWORD}`,
         method: 'POST', 
         data,
         token

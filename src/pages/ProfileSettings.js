@@ -8,6 +8,7 @@ import EditEmailModal from "../components/EditEmailModal";
 import EditNameModal from "../components/EditNameModal";
 import { getUser } from "../apis/users/getUser";
 import { uploadImgs } from "../apis/upload/uploadImgs";
+import { updateUserPic } from "../apis/users/updateUserPic";
 
 const ProfileSettings = () => {
   const navigate = useNavigate();
@@ -16,7 +17,6 @@ const ProfileSettings = () => {
   const [openEditNameModal, setOpenEditNameModal] = useState(false);
   let token = JSON.parse(localStorage.getItem("token"));
   let id = JSON.parse(localStorage.getItem("id"));
-  console.log("id", id);
   const [file, setFile] = useState();
   const [imgPreview, setImgPreview] = useState();
   const [user, setUser] = useState();
@@ -27,8 +27,6 @@ const ProfileSettings = () => {
       if (res?.data?.statusCode === 200) {
         setUser(res?.data?.data);
       }
-
-      console.log("res", res?.data?.data);
     };
     if (id) {
       callUserDetails();
@@ -55,23 +53,30 @@ const ProfileSettings = () => {
     }
   };
 
-  const handleSave =async()=>{
-    if(!file){
-      alert("select image to save as your profile picture")
-    }
-    else{
+  const handleChange = (e) => {
+    console.log("e",e.target.value)
+    const name = e.target.name;
+    user[name] = e.target.value
+    setUser({...user});
+  };
+
+  const handleSave = async () => {
+    if (!file) {
+      alert("select image to save as your profile picture");
+    } else {
       const formData = new FormData();
       formData.append("images", file);
       const uploadedRes = await uploadImgs(formData);
       if (uploadedRes.status) {
-        console.log("uploadedRes",uploadedRes.status)
+        const data = { imgUrl: uploadedRes.data.urls[0] };
+        await updateUserPic(token, id, data);
       }
       if (!uploadedRes.status) {
         alert(uploadedRes.statusMessage);
         return;
       }
     }
-  }
+  };
   return (
     <Fragment>
       <div className="header">
@@ -88,14 +93,17 @@ const ProfileSettings = () => {
           <div className="sidebar-text">
             <br />
             <div className="settings-inner-img-div">
-              {!file && <img
-                src={user?.profilePicture ? user?.profilePicture :"https://tse2.mm.bing.net/th?id=OIP.vvmpWt0qBu3LeBgZuUfmGAHaFt&pid=Api&P=0&h=180"}
-                alt="img profile"
-              />}
-              {file && <img
-                src={imgPreview}
-                alt="img profile"
-              />}
+              {!file && (
+                <img
+                  src={
+                    user?.profilePicture
+                      ? user?.profilePicture
+                      : "https://tse2.mm.bing.net/th?id=OIP.vvmpWt0qBu3LeBgZuUfmGAHaFt&pid=Api&P=0&h=180"
+                  }
+                  alt="img profile"
+                />
+              )}
+              {file && <img src={imgPreview} alt="img profile" />}
               <div className="plus-icon cam-icon">
                 <input
                   type="file"
@@ -116,7 +124,11 @@ const ProfileSettings = () => {
                 <strong>Display Name:</strong>
               </p>
               <div className="justify">
-              {user &&  <p>{user.firstname}{' '} {user.lastname}</p>}
+                {user && (
+                  <p>
+                    {user.firstname} {user.lastname}
+                  </p>
+                )}
                 <div onClick={() => setOpenEditNameModal(true)}>
                   <EditIcon />
                 </div>
@@ -128,7 +140,7 @@ const ProfileSettings = () => {
                 <strong>Email:</strong>
               </p>
               <div className="justify">
-              {user &&  <p>{user.email}</p>}
+                {user && <p>{user.email}</p>}
                 <div onClick={() => setOpenEditEmailModal(true)}>
                   <EditIcon />
                 </div>
@@ -144,7 +156,11 @@ const ProfileSettings = () => {
               </div>
             </div>
           </div>
-          {file && <div className="save-btn"><button onClick={handleSave}>Save</button></div>}
+          {file && (
+            <div className="save-btn">
+              <button onClick={handleSave}>Save</button>
+            </div>
+          )}
         </div>
       </div>
       <PasswordChangeModal
@@ -154,10 +170,16 @@ const ProfileSettings = () => {
       <EditEmailModal
         openEditEmailModal={openEditEmailModal}
         handleEditEmailModalClose={handleEditEmailModalClose}
+        user={user}
+        handleChange={handleChange}
+        //handleSave={handleSave}
       />
       <EditNameModal
         openEditNameModal={openEditNameModal}
         handleEditNameModalClose={handleEditNameModalClose}
+        user={user}
+        handleChange={handleChange}
+        //handleSave={handleSave}
       />
     </Fragment>
   );
